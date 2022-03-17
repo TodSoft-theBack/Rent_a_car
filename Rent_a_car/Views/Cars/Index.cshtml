@@ -1,0 +1,30 @@
+﻿@using Rent_a_car.ExtentionMethods;
+@using Rent_a_car.Entities;
+@using Rent_a_car.ActionFilters;
+@{
+    ViewData["Title"] = "Cars page";
+    Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    List<Cars> allCars = ViewContext.HttpContext.Session.GetObject<List<Cars>>("allCars");
+}
+<div>
+    <div class="carsContainer">
+        <div class="car">
+            <div class="car-title">All cars:</div>
+        </div>
+        @foreach (var car in allCars)
+        {
+            <div class="car">
+                <div class="car-title">@car.Brand @car.Model</div>
+                <div class="car-subtitle">@car.Year @car.PassengersCount</div>
+                <div class="car-header">@car.PricePerDay</div>
+                <div class="car-text">@car.Describtion</div>
+            </div>
+        }
+        @if (loggedUser.IsAdmin == 1)
+        {
+            <div class="car">
+                <div class="car-title"><a asp-action="AddCars" asp-controller="Cars">Add a car</a></div>
+            </div>
+        }
+    </div>
+</div>

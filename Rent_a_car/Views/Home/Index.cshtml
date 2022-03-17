@@ -1,0 +1,11 @@
+﻿@using Rent_a_car.Entities;
+@using Rent_a_car.ExtentionMethods;
+@using Rent_a_car.ActionFilters;
+@{
+    ViewData["Title"] = "Home Page";
+    Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+}
+
+<div class="text-center">
+    <h1 class="display-4">Rent a car here!</h1>
+</div>

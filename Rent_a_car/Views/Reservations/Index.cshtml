@@ -1,0 +1,47 @@
+﻿@using Rent_a_car.Entities
+@using Rent_a_car.ExtentionMethods
+@using Rent_a_car.ActionFilters;
+@{
+    ViewData["Title"] = "Reservations page";
+    Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    List<Reservations> allReservationsHistory = (List<Reservations>)ViewData["reservationHistory"];
+}
+<div>
+    <div class="carsContainer">
+        <div class="car">
+            <div class="car-title">All reservations: </div>
+        </div>
+        @foreach (var reservation in allReservationsHistory)
+        {
+            <div class="car">
+                <div class="car-header">Reservation #@reservation.Id</div>
+                <div class="car-title">Car: @reservation.Car.Brand @reservation.Car.Model @reservation.Car.Year </div>
+                <div class="car-subtitle">Period: @reservation.DateOfReservation.ToString() - @reservation.EndDate.ToString()</div>
+                <div class="car-text">@string.Format($"{((Statuses)reservation.Status).ToString()}")</div>
+                @if (loggedUser.IsAdmin == 1)
+                {
+                    if (reservation.Status == (int)Statuses.Upcoming)
+                    {
+                        <form asp-action="ApproveReservation" asp-route-id="@reservation.Id">
+                            <input type="submit" value="Aprove" class="btn btn-dark" />
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="RejectReservation" asp-route-id="@reservation.Id">
+                            <input type="submit" value="Reject" class="btn btn-danger" />
+                        </form>
+                    }
+
+                }
+
+            </div>
+        }
+        @if (loggedUser.IsAdmin == 0)
+        {
+            <div class="car">
+                <div class="car-title"><a asp-action="MakeReservations" asp-controller="Reservations">Reserve a car</a></div>
+            </div>
+        }
+    </div>
+</div>

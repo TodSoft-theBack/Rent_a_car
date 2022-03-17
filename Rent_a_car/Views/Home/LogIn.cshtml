@@ -1,0 +1,37 @@
+﻿@model Rent_a_car.ViewModels.LogInVM
+@using Rent_a_car.ActionFilters;
+@{
+    ViewData["Title"] = "Log in page";
+}
+<h1>Login</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">@Html.ValidationMessage("authError")</span>
+            </div>
+            <div>
+                <a asp-controller="Home" asp-action="Register"> Don't have an account? Sign up here!</a><br />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Log in" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

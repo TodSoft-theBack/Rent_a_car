@@ -1,0 +1,33 @@
+﻿@model Rent_a_car.ViewModels.ReservationsVM
+@using Rent_a_car.ActionFilters;
+@{
+    ViewData["Title"] = "ReserveCars";
+}
+<h1>ReserveCars</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="MakeReservations">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CarId" class="control-label"></label>
+                <select asp-for="CarId" class="form-control" asp-items="ViewBag.AvalableCarsIDsList"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfReservaion" class="control-label"></label>
+                <input asp-for="DateOfReservaion" class="form-control" />
+                <span asp-validation-for="DateOfReservaion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Make a reservation" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
