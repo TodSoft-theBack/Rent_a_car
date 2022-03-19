@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -18,7 +19,7 @@ namespace Rent_a_car.Entities
         public string Brand { get; set; }
         public int Year { get; set; }
         public int PassengersCount { get; set; }
-        public string Describtion { get; set; }
+        public string Description { get; set; }
         public decimal PricePerDay { get; set; }
         public virtual ICollection<Reservations> Reservations { get; set; }
     }

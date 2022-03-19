@@ -28,7 +28,7 @@ namespace Rent_a_car.Controllers
             else
                 reservationHistory = _database.Reservations.Include(r => r.Car).ToList();
             ViewData["reservationHistory"] = reservationHistory;
-            _database.Reservations.Where(r => r.Status == (int)Statuses.Aproved && r.DateOfReservation > DateTime.Now).ForEachAsync(r => r.Status = (int)Statuses.Ongoing);
+            _database.Reservations.Where(r => r.Status == (int)Statuses.Approved && r.DateOfReservation > DateTime.Now).ForEachAsync(r => r.Status = (int)Statuses.Ongoing);
             _database.Reservations.Where(r => r.Status == (int)Statuses.Ongoing && r.EndDate < DateTime.Now).ForEachAsync(r => r.Status = (int)Statuses.Completed);
             _database.Reservations.Where(r => r.EndDate < DateTime.Today).ForEachAsync(r => r.Status = (int)Statuses.Missed);
             _database.SaveChanges();
@@ -39,7 +39,7 @@ namespace Rent_a_car.Controllers
         public ActionResult ApproveReservation(int id)
         {
             var reservation = _database.Reservations.Where(r => r.Id == id).FirstOrDefault();
-            reservation.Status = (int)Statuses.Aproved;
+            reservation.Status = (int)Statuses.Approved;
             reservation.AprovedDate = DateTime.Now;
             _database.SaveChanges();
             return RedirectToAction("Index");

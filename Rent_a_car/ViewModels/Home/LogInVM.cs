@@ -14,6 +14,7 @@ namespace Rent_a_car.ViewModels
         public string Username { get; set; }
 
         [DisplayName("Password: ")]
+        [DataType(DataType.Password)]
         [Required(ErrorMessage = "*This field is Required!")]
         public string Password { get; set; }
     }
