@@ -20,19 +20,22 @@ namespace Rent_a_car.ViewModels
         public string Brand { get; set; }
 
         [DisplayName("Year: ")]
+        [Range(1950, 2022, ErrorMessage = "*Enter a valid date.")]
         [Required(ErrorMessage = "*This field is Required!")]
         [CarsYearValidation()]
         public int Year { get; set; }
 
         [DisplayName("No of passengers: ")]
+        [Range(1, 8, ErrorMessage = "*Enter a valid passengers count.")]
         [Required(ErrorMessage = "*This field is Required!")]
         public int PassengersCount { get; set; }
 
-        [DisplayName("Describtion: ")]
+        [DisplayName("Description: ")]
         [Required(ErrorMessage = "*This field is Required!")]
-        public string Describtion { get; set; }
+        public string Description { get; set; }
 
         [DisplayName("Price per day: ")]
+        [Range(50, 1000, ErrorMessage = "*Enter a valid price.")]
         [Required(ErrorMessage = "*This field is Required!")]
         public decimal PricePerDay { get; set; }
 
@@ -42,7 +45,7 @@ namespace Rent_a_car.ViewModels
             Brand = this.Brand,
             Year = this.Year,
             PassengersCount = this.PassengersCount,
-            Describtion = this.Describtion,
+            Description = this.Description,
             PricePerDay = this.PricePerDay
         };
     }

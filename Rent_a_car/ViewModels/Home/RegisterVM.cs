@@ -15,6 +15,7 @@ namespace Rent_a_car.ViewModels
         public string UserName { get; set; }
 
         [DisplayName("Password: ")]
+        [DataType(DataType.Password)]
         [Required(ErrorMessage = "*This field is Required!")]
         public string Password { get; set; }
 
@@ -28,16 +29,18 @@ namespace Rent_a_car.ViewModels
 
         [DisplayName("EGN: ")]
         [Required(ErrorMessage = "*This field is Required!")]
-        [StringLength(10, ErrorMessage ="EGN must be 10 characters!")]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "*EGN must only contain numbers")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage ="EGN must be 10 characters!")]
         public string Egn { get; set; }
 
         [DisplayName("Email: ")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "*Enter a valid email")]
         [Required(ErrorMessage = "*This field is Required!")]
         public string Email { get; set; }
 
         [DisplayName("Phone number: ")]
         [Required(ErrorMessage = "*This field is Required!")]
-        [StringLength(13, ErrorMessage ="The phone number is too long!")]
+        [StringLength(13, MinimumLength = 9, ErrorMessage ="Phone number must be 9-13 characters!")]
         public string Phone { get; set; }
 
         public Users GetUser() => new Users() {

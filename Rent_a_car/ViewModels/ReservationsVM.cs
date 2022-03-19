@@ -15,9 +15,13 @@ namespace Rent_a_car.ViewModels
         public int CarId { get; set; }
         [DisplayName("Date of reservaion:")]
         [Required(ErrorMessage = "*This field is required!")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/mm/yyyy}")]
         public DateTime DateOfReservaion { get; set; }
         [DisplayName("End of reservation:")]
         [Required(ErrorMessage = "*This field is required!")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/mm/yyyy}")]
         public DateTime EndDate { get; set; }
 
         public Reservations GetReservation() => new Reservations()
