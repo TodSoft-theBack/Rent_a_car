@@ -67,39 +67,56 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+@media screen and (max-width: 570px) {
+    .user-greeting {
+        display:none;
+    }
+}
+/*#f78a2a*/
+.index-heading li {
+    display: inline;
+}
+.index-title {
+    font-size: 2rem;
+}
 .carsContainer {
     margin: 0 auto;
     padding: 1rem 0rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #5f5f5f;
-    width: 50vw;
+    width: 70vw;
     height: -moz-fit-content;
     height: fit-content;
-    border-radius: 1rem;
 }
 .car {
     display: flex;
     flex-direction: column;
-    margin: 0.5rem 0;
-    width: 90%;
+    margin: 1rem 0;
+    padding-bottom: 1rem;
+    width: 70%;
+    min-width: 400px;
     height: -moz-fit-content;
     height: fit-content;
     border-radius: 2rem;
     background-color: white;
     text-align: center;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: box-shadow 0.5s ease; 
 }
-.car-title{
+.car:hover {
+    box-shadow: 0 0 15px #544c48;
+}
+.car-title {
     font-size: 2rem;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #f78a2a;
+    color: #fff;
 }
-.car-subtitle {
+.car-text {
     font-size: 1rem;
-    color:lightgrey;
-}
-.car-header{
-    font-size:1.5rem;
-}
-.car-text{
-    font-size:1rem;
+    color: #544c48;
 }

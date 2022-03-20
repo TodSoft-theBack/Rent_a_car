@@ -42,7 +42,7 @@ namespace Rent_a_car
                     .IsRequired()
                     .HasMaxLength(30);
 
-                entity.Property(e => e.Describtion).HasMaxLength(255);
+                entity.Property(e => e.Description).HasMaxLength(255);
 
                 entity.Property(e => e.Model)
                     .IsRequired()
@@ -121,8 +121,74 @@ namespace Rent_a_car
             });
 
             OnModelCreatingPartial(modelBuilder);
+
+            this.SeedCars(modelBuilder);
+            this.SeedUsers(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        private void SeedCars(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Cars>().HasData(
+                new Cars()
+                {
+                    Id = 1,
+                    Model = "SampleModel1",
+                    Brand = "SampleBrand1",
+                    Year = 2000,
+                    PassengersCount = 4,
+                    Description = "Sample car 1",
+                    PricePerDay = 100
+                },
+                new Cars()
+                {
+                    Id = 2,
+                    Model = "SampleModel2",
+                    Brand = "SampleBrand2",
+                    Year = 1980,
+                    PassengersCount = 4,
+                    Description = "Sample car 2",
+                    PricePerDay = 60
+                },
+                new Cars()
+                {
+                    Id = 3,
+                    Model = "SampleModel3",
+                    Brand = "SampleBrand3",
+                    Year = 2005,
+                    PassengersCount = 4,
+                    Description = "Sample car 3",
+                    PricePerDay = 75
+                });
+        }
+        private void SeedUsers(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Users>().HasData(
+                new Users()
+                {
+                    Id = 1,
+                    UserName = "admin",
+                    Password = "123",
+                    FirstName = "Admin",
+                    LastName = "Adminov",
+                    Email = "admin@admin.com",
+                    Egn = "035435446",
+                    Phone = "066778899",
+                    IsAdmin = 1
+                },
+                new Users()
+                {
+                    Id = 2,
+                    UserName = "user",
+                    Password = "123",
+                    FirstName = "User",
+                    LastName = "Userov",
+                    Email = "user@user.com",
+                    Egn = "034834890",
+                    Phone = "099887766",
+                    IsAdmin = 0
+                });
+        }
     }
 }
