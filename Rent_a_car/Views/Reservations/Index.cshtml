@@ -4,43 +4,88 @@
 @{
     ViewData["Title"] = "Reservations page";
     Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    //Get the reservations to be displayed on the page
     List<Reservations> allReservationsHistory = (List<Reservations>)ViewData["reservationHistory"];
+    //Get the cars to be displayed in the dropdown
+    IEnumerable<SelectListItem> allCars = (IEnumerable<SelectListItem>)ViewData["allCars"];
 }
 <div>
-    <div class="carsContainer">
-        <div class="car">
-            <div class="car-title">All reservations: </div>
+    <div class="main-container">
+
+        <div class="main-heading">
+            Reservations:
         </div>
-        @foreach (var reservation in allReservationsHistory)
+        @if (loggedUser.IsAdmin == 1)
         {
-            <div class="car">
-                <div class="car-header">Reservation #@reservation.Id</div>
-                <div class="car-title">Car: @reservation.Car.Brand @reservation.Car.Model @reservation.Car.Year </div>
-                <div class="car-subtitle">Period: @reservation.DateOfReservation.ToString() - @reservation.EndDate.ToString()</div>
-                <div class="car-text">@string.Format($"{((Statuses)reservation.Status).ToString()}")</div>
-                @if (loggedUser.IsAdmin == 1)
-                {
-                    if (reservation.Status == (int)Statuses.Upcoming)
-                    {
-                        <form asp-action="ApproveReservation" asp-route-id="@reservation.Id">
-                            <input type="submit" value="Aprove" class="btn btn-dark" />
-                        </form>
-                    }
-                    else if(reservation.Status != (int)Statuses.Missed)
-                    {
-                        <form asp-action="RejectReservation" asp-route-id="@reservation.Id">
-                            <input type="submit" value="Reject" class="btn btn-danger" />
-                        </form>
-                    }
-
+            //Filter reservations by car
+            <div class="filter-dropdown">
+                @using (Html.BeginForm("Index", "Reservations", FormMethod.Get))
+                { 
+                    @Html.DropDownList("Id", (IEnumerable<SelectListItem>)ViewData["allCars"],
+                        "All cars", new { onchange="this.form.submit();"});
                 }
-
             </div>
         }
+
+        @if (allReservationsHistory.Count == 0)
+        {
+            <div class="no-result-caption">
+                No reservations were made for this car.
+            </div>
+        }
+
+        @if (allReservationsHistory.Count > 0) 
+        {
+            foreach (var reservation in allReservationsHistory)
+            {
+                <div class="car">
+                    
+                    <div class="reservation-info">
+                        Reservation #@reservation.Id
+                    </div>
+                    <div class="reservation-info">
+                        Car: @reservation.Car.Brand @reservation.Car.Model @reservation.Car.Year
+                    </div>
+                    <div class="reservation-info">
+                        Period: @reservation.DateOfReservation.ToString() - @reservation.EndDate.ToString()
+                    </div>
+                    <div class="reservation-info">
+                        @string.Format($"{((Statuses)reservation.Status).ToString()}")
+                    </div>
+                    
+                    <div class="button-row">
+
+                        @* Todo: button that redirects to the car's page *@
+
+                        @* Show approve & reject buttons only if user is admin *@
+                        @if (loggedUser.IsAdmin == 1)
+                        {
+                            if (reservation.Status == (int)Statuses.Upcoming)
+                            {
+                                <form asp-action="ApproveReservation" asp-route-id="@reservation.Id">
+                                    <input type="submit" value="Aprove" class="btn btn-dark" />
+                                </form>
+                            }
+                            else if(reservation.Status != (int)Statuses.Missed)
+                            {
+                                <form asp-action="RejectReservation" asp-route-id="@reservation.Id">
+                                    <input type="submit" value="Reject" class="btn btn-danger" />
+                                </form>
+                            }
+
+                        }
+                    </div>
+
+                </div>
+            }
+        }
+
         @if (loggedUser.IsAdmin == 0)
         {
-            <div class="car">
-                <div class="car-title"><a asp-action="MakeReservations" asp-controller="Reservations">Reserve a car</a></div>
+            <div class="reservation-new">
+                <a asp-action="MakeReservations" asp-controller="Reservations">
+                    Reserve a car
+                </a>
             </div>
         }
     </div>
