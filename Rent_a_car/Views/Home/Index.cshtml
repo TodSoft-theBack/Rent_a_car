@@ -1,11 +1,47 @@
 ﻿@using Rent_a_car.Entities;
 @using Rent_a_car.ExtentionMethods;
 @using Rent_a_car.ActionFilters;
+@model Rent_a_car.ViewModels.HomeQueryVM
 @{
     ViewData["Title"] = "Home Page";
     Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Rent a car here!</h1>
-</div>
+@if (loggedUser.IsAdmin == 0)
+{
+    <form asp-action="Index" asp-controller="Home" method="post">
+        <div style="display:flex; flex-direction: column; margin:0 auto; top:5rem;">
+            <div class="form-group">
+                <label asp-for="PickUpDate"></label>
+                <input type="date" asp-for="PickUpDate" />
+                <span class="text-danger" asp-validation-for="PickUpDate"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PickUpStation"></label>
+                <select asp-for="PickUpStation" asp-items="ViewBag.pickUpLocations"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DropOffDate"></label>
+                <input type="date" asp-for="DropOffDate"/>
+                <span class="text-danger" asp-validation-for="DropOffDate"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DropOffStation"></label>
+                <select asp-for="DropOffStation" asp-items="ViewBag.dropOffLocations"></select>
+            </div>
+            <div class="form-group">
+                <label class="text-danger">@Html.ValidationMessage("stateError")</label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search!" class="btn btn-success" />
+            </div>
+        </div>
+
+    </form>
+}
+else
+{
+    <div class="text-center">
+        Rent a car here!
+    </div>
+}

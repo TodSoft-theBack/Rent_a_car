@@ -43,9 +43,12 @@
                                         <li>
                                             <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">Reservations</a>
                                         </li>
-                                        <li>
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">Cars</a>
-                                        </li>
+                                        @if (loggedUser.IsAdmin == 1)
+                                        {
+                                            <li>
+                                                <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">Cars</a>
+                                            </li>
+                                        }
                                         <li>
                                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="LogOut">Log out</a>
                                         </li>

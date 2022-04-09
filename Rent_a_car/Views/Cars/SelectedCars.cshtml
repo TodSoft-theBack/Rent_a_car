@@ -1,0 +1,24 @@
+﻿@using Rent_a_car.ExtentionMethods;
+@using Rent_a_car.Entities;
+@using Rent_a_car.ActionFilters;
+@{
+    ViewData["Title"] = "Cars page";
+    Users loggedUser = ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    List<Cars> avaliableCars = ViewContext.HttpContext.Session.GetObject<List<Cars>>("avaliableCars"); ;
+}
+<div>
+    <div>Avalable cars:</div>
+    <div>
+        Filters:
+    </div>
+    @{
+        foreach (var car in avaliableCars)
+        {
+            <div>
+                <div>
+                    @car.Brand @car.Model
+                </div>
+            </div>
+        }
+    }
+</div>

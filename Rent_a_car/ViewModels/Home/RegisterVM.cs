@@ -35,11 +35,9 @@ namespace Rent_a_car.ViewModels
 
         [DisplayName("Email: ")]
         [DataType(DataType.EmailAddress, ErrorMessage = "*Enter a valid email")]
-        [Required(ErrorMessage = "*This field is Required!")]
         public string Email { get; set; }
 
         [DisplayName("Phone number: ")]
-        [Required(ErrorMessage = "*This field is Required!")]
         [StringLength(13, MinimumLength = 9, ErrorMessage ="Phone number must be 9-13 characters!")]
         public string Phone { get; set; }
 

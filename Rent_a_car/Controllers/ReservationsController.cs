@@ -22,6 +22,8 @@ namespace Rent_a_car.Controllers
         public ActionResult Index()
         {
             var user = HttpContext.Session.GetObject<Users>("loggedUser");
+            if (user == null)
+                return RedirectToAction("LogIn", "Home");
             List<Reservations> reservationHistory = new List<Reservations>();
             if (user.IsAdmin == 0)
                 reservationHistory = _database.Reservations.Include(r => r.Car).Where(r => r.UserId == user.Id).ToList();

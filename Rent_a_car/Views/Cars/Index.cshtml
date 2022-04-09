@@ -9,14 +9,37 @@
 <div>
     <ul class="index-heading">
         <li class="index-title">All cars</li>
-        <li class="index-title" style="float:right;"><a asp-action="AddCars" asp-controller="Cars">Add a car</a></li>
+        @if (loggedUser.IsAdmin == 1)
+        {
+            <li class="index-title" style="float:right;"><a asp-action="AddCars" asp-controller="Cars">Add a car</a></li>
+        }
     </ul>
+    <form class="filters-headings" method="post" asp-action="filter-Cars">
+        Filters:
+        <div class="filter-heading" onclick="ToggleDateFilter()">
+            By Date
+        </div>
+        <div class="dateFilter invisible">
+            <input type="datetime" />
+            <input type="datetime" />
+            <input type="submit" value="Filter date!" class="btn btn-dark" />
+        </div>
+        <div class="filter-heading" onclick="ToggleGearBoxesFilter()">
+            By Gearbox
+        </div>
+        <div class="gearBoxesFilter invisible">
+            <select asp-items="ViewBag.gearBoxes"></select>
+            <input type="submit" value="Filter gearbox" class="btn btn-dark" />
+        </div>
+    </form>
     <div class="carsContainer">
         @foreach (var car in allCars)
         {
-            <div class="car">
+        <div class="car">
+            <div class="car-picture"> <img src="~/CarImages/@car.Picture" /></div>
+            <div class="car-textContainer">
                 <div class="car-title">@car.Brand @car.Model</div>
-                <div class="car-text">Year: @car.Year</div>
+                <div class="car-text">Gearbox: @(((GearBoxes)car.GearBox).ToString())</div>
                 <div class="car-text">Passengers count: @car.PassengersCount</div>
                 <div class="car-text">Price per day: @car.PricePerDay</div>
                 <div class="car-text">@car.Description</div>
@@ -26,6 +49,8 @@
                     <a asp-action="DeleteCars" asp-route-id="@car.Id">Delete</a>
                 }
             </div>
+
+        </div>
         }
         @if (loggedUser.IsAdmin == 1)
         {

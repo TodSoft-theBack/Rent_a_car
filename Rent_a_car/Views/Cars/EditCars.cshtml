@@ -1,4 +1,4 @@
-﻿@model Rent_a_car.Entities.Cars
+﻿@model Rent_a_car.ViewModels.CarsVM
 
 @{
     ViewData["Title"] = "EditCars";
@@ -12,7 +12,6 @@
     <div class="col-md-4">
         <form asp-action="EditCars">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Model" class="control-label"></label>
                 <input asp-for="Model" class="form-control" />
@@ -37,6 +36,28 @@
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GearBox" class="control-label"></label>
+                <select asp-for="GearBox" class="form-control" asp-items="ViewBag.gearBoxes"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EngineType" class="control-label"></label>
+                <select asp-for="EngineType" class="form-control" asp-items="ViewBag.engineTypes"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EnginePower" class="control-label"></label>
+                <input asp-for="EnginePower" class="form-control" />
+                <span asp-validation-for="EnginePower" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarType" class="control-label"></label>
+                <select asp-for="CarType" class="form-control" asp-items="ViewBag.carTypes"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Picture" class="control-label"></label>
+                <input asp-for="Picture" class="form-control" />
+                <span asp-validation-for="Picture" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PricePerDay" class="control-label"></label>

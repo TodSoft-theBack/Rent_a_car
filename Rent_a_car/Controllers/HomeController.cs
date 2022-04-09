@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rent_a_car.Entities;
 using Rent_a_car.ExtentionMethods;
@@ -22,6 +24,18 @@ namespace Rent_a_car.Controllers
         }
         public IActionResult Index()
         {
+            var loggedUser = HttpContext.Session.GetObject<Users>("loggedUser");
+            if (loggedUser is null)
+                return RedirectToAction("LogIn", "Home");
+            List<SelectListItem> pickUpLocations = new List<SelectListItem>();
+            foreach (var location in _database.Location)
+                pickUpLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
+            List<SelectListItem> dropOffLocations = new List<SelectListItem>();
+            foreach (var location in _database.Location)
+                dropOffLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
+            dropOffLocations.Add(new SelectListItem("<Same as pick up>", "-1", true));
+            ViewBag.PickUpLocations = pickUpLocations;
+            ViewBag.DropOffLocations = dropOffLocations;
             return View();
         }
         public IActionResult Register()
@@ -37,7 +51,7 @@ namespace Rent_a_car.Controllers
             user.IsAdmin = 0;
             _database.Users.Add(user);
             _database.SaveChanges();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
         public IActionResult LogIn()
         {
@@ -62,6 +76,38 @@ namespace Rent_a_car.Controllers
             }
             HttpContext.Session.SetObject("loggedUser", user);
             return RedirectToAction("Index","Home");
+        }
+        [HttpPost]
+        public IActionResult Index(HomeQueryVM input)
+        {
+            var loggedUser = HttpContext.Session.GetObject<Users>("loggedUser");
+            if (loggedUser is null)
+                return RedirectToAction("LogIn", "Home");
+            List<SelectListItem> pickUpLocations = new List<SelectListItem>();
+            foreach (var location in _database.Location)
+                pickUpLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
+            List<SelectListItem> dropOffLocations = new List<SelectListItem>();
+            foreach (var location in _database.Location)
+                dropOffLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
+            dropOffLocations.Add(new SelectListItem("<Same as pick up>", "-1", true));
+            ViewBag.PickUpLocations = pickUpLocations;
+            ViewBag.DropOffLocations = dropOffLocations;
+            if (!this.ModelState.IsValid)
+            {
+                return View(input);
+            }
+            var cars = _database.Cars
+                .Include(c => c.Reservations)
+                .Where(c => c.Reservations.Count == 0 ||
+                    c.Reservations
+                    .Where(r => r.EndDate < input.PickUpDate && input.DropOffDate < r.DateOfReservation).Count() > 0).ToList();
+            if (cars is null)
+            {
+                this.ModelState.AddModelError("stateError", "No cars avalable for this period and places!");
+                return  View (input);
+            }
+            HttpContext.Session.SetObject<List<Cars>>("avaliableCars", cars);
+            return RedirectToAction("SelectedCars", "Cars");
         }
         public IActionResult LogOut()
         {

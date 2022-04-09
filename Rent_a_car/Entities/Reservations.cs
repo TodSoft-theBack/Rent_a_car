@@ -15,9 +15,13 @@ namespace Rent_a_car.Entities
         public DateTime DateOfReservation { get; set; }
         public DateTime? AprovedDate { get; set; }
         public DateTime EndDate { get; set; }
+        public int PickUpLocationId { get; set; }
+        public int? DropOffLocationId { get; set; }
         public int Status { get; set; }
 
         public virtual Cars Car { get; set; }
+        public virtual Location DropOffLocation { get; set; }
+        public virtual Location PickUpLocation { get; set; }
         public virtual Users User { get; set; }
     }
 }

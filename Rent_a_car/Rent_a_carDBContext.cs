@@ -1,7 +1,7 @@
 ﻿using System;
-using Rent_a_car.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Rent_a_car.Entities;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -21,6 +21,7 @@ namespace Rent_a_car
         }
 
         public virtual DbSet<Cars> Cars { get; set; }
+        public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<Reservations> Reservations { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
@@ -28,7 +29,7 @@ namespace Rent_a_car
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Rent_a_carDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Rent_a_carDB;Integrated Security=True;Trusted_Connection=True;");
             }
         }
 
@@ -48,11 +49,24 @@ namespace Rent_a_car
                     .IsRequired()
                     .HasMaxLength(30);
 
+                entity.Property(e => e.Picture)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
                 entity.Property(e => e.PricePerDay).HasColumnType("decimal(20, 2)");
 
                 entity.Property(e => e.Year)
                     .IsRequired()
                     .HasMaxLength(4);
+            });
+
+            modelBuilder.Entity<Location>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Address)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Reservations>(entity =>
@@ -65,7 +79,11 @@ namespace Rent_a_car
 
                 entity.Property(e => e.DateOfReservation).HasColumnType("datetime");
 
+                entity.Property(e => e.DropOffLocationId).HasColumnName("DropOffLocationID");
+
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PickUpLocationId).HasColumnName("PickUpLocationID");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -73,19 +91,30 @@ namespace Rent_a_car
                     .WithMany(p => p.Reservations)
                     .HasForeignKey(d => d.CarId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reservati__CarID__29572725");
+                    .HasConstraintName("FK__Reservati__CarID__2F10007B");
+
+                entity.HasOne(d => d.DropOffLocation)
+                    .WithMany(p => p.ReservationsDropOffLocation)
+                    .HasForeignKey(d => d.DropOffLocationId)
+                    .HasConstraintName("FK__Reservati__DropO__31EC6D26");
+
+                entity.HasOne(d => d.PickUpLocation)
+                    .WithMany(p => p.ReservationsPickUpLocation)
+                    .HasForeignKey(d => d.PickUpLocationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Reservati__PickU__30F848ED");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Reservations)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reservati__UserI__2A4B4B5E");
+                    .HasConstraintName("FK__Reservati__UserI__300424B4");
             });
 
             modelBuilder.Entity<Users>(entity =>
             {
                 entity.HasIndex(e => e.Egn)
-                    .HasName("UQ__Users__C1902746182ECBAF")
+                    .HasName("UQ__Users__C1902746F0F4A62E")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -95,9 +124,7 @@ namespace Rent_a_car
                     .HasColumnName("EGN")
                     .HasMaxLength(10);
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.Email).HasMaxLength(50);
 
                 entity.Property(e => e.FirstName)
                     .IsRequired()
@@ -111,9 +138,7 @@ namespace Rent_a_car
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Phone)
-                    .IsRequired()
-                    .HasMaxLength(15);
+                entity.Property(e => e.Phone).HasMaxLength(15);
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
@@ -121,74 +146,8 @@ namespace Rent_a_car
             });
 
             OnModelCreatingPartial(modelBuilder);
-
-            this.SeedCars(modelBuilder);
-            this.SeedUsers(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        private void SeedCars(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Cars>().HasData(
-                new Cars()
-                {
-                    Id = 1,
-                    Model = "SampleModel1",
-                    Brand = "SampleBrand1",
-                    Year = 2000,
-                    PassengersCount = 4,
-                    Description = "Sample car 1",
-                    PricePerDay = 100
-                },
-                new Cars()
-                {
-                    Id = 2,
-                    Model = "SampleModel2",
-                    Brand = "SampleBrand2",
-                    Year = 1980,
-                    PassengersCount = 4,
-                    Description = "Sample car 2",
-                    PricePerDay = 60
-                },
-                new Cars()
-                {
-                    Id = 3,
-                    Model = "SampleModel3",
-                    Brand = "SampleBrand3",
-                    Year = 2005,
-                    PassengersCount = 4,
-                    Description = "Sample car 3",
-                    PricePerDay = 75
-                });
-        }
-        private void SeedUsers(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Users>().HasData(
-                new Users()
-                {
-                    Id = 1,
-                    UserName = "admin",
-                    Password = "123",
-                    FirstName = "Admin",
-                    LastName = "Adminov",
-                    Email = "admin@admin.com",
-                    Egn = "035435446",
-                    Phone = "066778899",
-                    IsAdmin = 1
-                },
-                new Users()
-                {
-                    Id = 2,
-                    UserName = "user",
-                    Password = "123",
-                    FirstName = "User",
-                    LastName = "Userov",
-                    Email = "user@user.com",
-                    Egn = "034834890",
-                    Phone = "099887766",
-                    IsAdmin = 0
-                });
-        }
     }
 }

@@ -15,7 +15,7 @@
         {
             <div class="car">
                 <div class="car-header">Reservation #@reservation.Id</div>
-                <div class="car-title">Car: @reservation.Car.Brand @reservation.Car.Model @reservation.Car.Year </div>
+                <div class="car-title">Car: @reservation.Car.Brand @reservation.Car.Model @(((GearBoxes)reservation.Car.GearBox).ToString()) </div>
                 <div class="car-subtitle">Period: @reservation.DateOfReservation.ToString() - @reservation.EndDate.ToString()</div>
                 <div class="car-text">@string.Format($"{((Statuses)reservation.Status).ToString()}")</div>
                 @if (loggedUser.IsAdmin == 1)
@@ -35,12 +35,6 @@
 
                 }
 
-            </div>
-        }
-        @if (loggedUser.IsAdmin == 0)
-        {
-            <div class="car">
-                <div class="car-title"><a asp-action="MakeReservations" asp-controller="Reservations">Reserve a car</a></div>
             </div>
         }
     </div>
