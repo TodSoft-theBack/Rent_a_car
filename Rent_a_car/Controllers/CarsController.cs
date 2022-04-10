@@ -187,6 +187,7 @@ namespace Rent_a_car.Controllers
             ViewBag.engineTypes = engineTypes;
             ViewBag.gearBoxes = gearBoxes;
             ViewBag.carTypes = carTypes;
+
             return View(CarsVM.GetCarsVM(car));
         }
 
@@ -195,16 +196,6 @@ namespace Rent_a_car.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Cars car = new Cars()
-                //{
-                //    Id = input.Id,
-                //    Model = input.Model,
-                //    Brand = input.Brand,
-                //    Year = input.Year.ToString(),
-                //    PassengersCount = input.PassengersCount,
-                //    Description = input.Description,
-                //    PricePerDay = input.PricePerDay
-                //};
                 Cars car = _database.Cars.Find(input.Id);
                 car = input.GetCar(car);
                 if (!(input.Picture  is null))

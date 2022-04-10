@@ -104,14 +104,15 @@ body {
     box-shadow: 0 0 15px #544c48;
 }
 .car-title {
-    width: 100%;
     font-size: 2rem;
-    border-top-left-radius: 2rem;
-    border-top-right-radius: 2rem;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
-    background-color: #f78a2a;
+    background-color: #5cb85c;
     color: #fff;
+    width: 100%;
+    border-start-start-radius: 2rem;
+    border-start-end-radius: 2rem;
+    text-align: center;
 }
 .car-text {
     font-size: 1rem;

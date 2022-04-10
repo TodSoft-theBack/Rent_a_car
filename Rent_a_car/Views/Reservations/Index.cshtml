@@ -4,16 +4,14 @@
 @{
     ViewData["Title"] = "Reservations page";
     Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
-    List<Reservations> allReservationsHistory = (List<Reservations>)ViewData["reservationHistory"];
+    List<Reservations> allReservationsHistory = ((List<Reservations>)ViewData["reservationHistory"]).OrderByDescending (c => c.DateOfReservation).ToList();
 }
 <div>
     <div class="carsContainer">
-        <div class="car">
             <div class="car-title">All reservations: </div>
-        </div>
         @foreach (var reservation in allReservationsHistory)
         {
-    <div class="car" style="display:flex; flex-direction:column; justify-content:center;">
+    <div class="car" style="display: flex; flex-direction: column; justify-content: center; margin-bottom: 2rem;">
         <div class="reservation-header">Reservation #@reservation.Id</div>
         <div class="reservation-car">Car: @reservation.Car.Brand @reservation.Car.Model @(((GearBoxes)reservation.Car.GearBox).ToString()) </div>
         <div class="reservation-period">Period: @reservation.DateOfReservation.ToShortDateString() - @reservation.EndDate.ToShortDateString()</div>

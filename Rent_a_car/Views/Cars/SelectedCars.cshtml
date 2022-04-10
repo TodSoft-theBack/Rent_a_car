@@ -48,7 +48,7 @@
         <div style="display:flex; flex-direction:column; width: max-content">
             @foreach (var car in avaliableCars)
             {
-                <div class="car-container" style="width: max-content">
+                <div class="car-container" style="width: max-content; margin-bottom:1rem;">
                     <div class="car-title text-center">
                         @car.Brand @car.Model
                     </div>
@@ -67,7 +67,7 @@
                                     <span>@Html.ValidationMessage("carError")</span>
                                 </div>
                                 <div class="form-group">
-                                    <label class="text-center">@car.PricePerDay</label>
+                                    <label class="text-center">@car.PricePerDay EUR</label>
                                 </div>
                                 <input type="submit" value="Reserve" class="btn btn-warning" />
                             </form>
