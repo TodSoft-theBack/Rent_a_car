@@ -1,34 +1,30 @@
 ﻿@using Rent_a_car.ExtentionMethods;
 @using Rent_a_car.Entities;
 @using Rent_a_car.ActionFilters;
+@model Rent_a_car.ViewModels.CarFilterVM
 @{
     ViewData["Title"] = "Cars page";
     Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
-    List<Cars> allCars = ViewContext.HttpContext.Session.GetObject<List<Cars>>("allCars");
+    var cars = this.ViewContext.HttpContext.Session.GetObject<List<Cars>>("allCars");
+    var filter = this.ViewContext.HttpContext.Session.GetObject<CarFilterVM>("GearBoxFilter");
+    List<Cars> allCars = filter is null || (int)filter.GearBox == -1 ? 
+        cars : cars.Where(c => c.GearBox == (int)filter.GearBox).ToList();
 }
 <div>
     <ul class="index-heading">
         <li class="index-title">All cars</li>
         @if (loggedUser.IsAdmin == 1)
         {
-            <li class="index-title" style="float:right;"><a asp-action="AddCars" asp-controller="Cars">Add a car</a></li>
+            <li class="index-title" style="float:right;"><a asp-action="AddCar" asp-controller="Cars">Add a car</a></li>
         }
     </ul>
-    <form class="filters-headings" method="post" asp-action="filter-Cars">
-        Filters:
-        <div class="filter-heading" onclick="ToggleDateFilter()">
-            By Date
-        </div>
-        <div class="dateFilter invisible">
-            <input type="datetime" />
-            <input type="datetime" />
-            <input type="submit" value="Filter date!" class="btn btn-dark" />
-        </div>
-        <div class="filter-heading" onclick="ToggleGearBoxesFilter()">
+    <form class="filters-headings" method="post" asp-action="FilterCars">
+        <h3>Filters:</h3>
+        <div class="filter-heading btn btn-outline-warning" onclick="ToggleGearBoxesFilter()">
             By Gearbox
         </div>
         <div class="gearBoxesFilter invisible">
-            <select asp-items="ViewBag.gearBoxes"></select>
+            <select asp-for="GearBox" asp-items="ViewBag.gearBoxes"></select>
             <input type="submit" value="Filter gearbox" class="btn btn-dark" />
         </div>
     </form>
@@ -45,8 +41,8 @@
                 <div class="car-text">@car.Description</div>
                 @if (loggedUser.IsAdmin == 1)
                 {
-                    <a asp-action="EditCars" asp-route-id="@car.Id">Edit</a>
-                    <a asp-action="DeleteCars" asp-route-id="@car.Id">Delete</a>
+                    <a asp-action="EditCar" asp-route-id="@car.Id">Edit</a>
+                    <a asp-action="DeleteCar" asp-route-id="@car.Id">Delete</a>
                 }
             </div>
 

@@ -1,0 +1,45 @@
+﻿@using Rent_a_car.Entities;
+@using Rent_a_car.ExtentionMethods;
+@using Rent_a_car.ActionFilters;
+@model Rent_a_car.ViewModels.HomeQueryVM
+@{
+    ViewData["Title"] = "Profile Page";
+    Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+}
+<div>
+    <div class="accountInfo">
+        <h1>Account information:</h1>
+        <div class="spearator"></div>
+        <div class="accountInfoContainer">
+            <div><strong>Username:</strong> @loggedUser.UserName</div>
+            <div><strong>First name:</strong> @loggedUser.FirstName</div>
+            <div><strong>Last name:</strong> @loggedUser.LastName</div>
+            <div><strong>Email:</strong> @loggedUser.Email</div>
+            <div><strong>Has administration rights:</strong> @(loggedUser.IsAdmin == 0 ? "No":"Yes")</div>
+        </div>
+    </div>
+    
+    <div class="accountActions" style="display:flex; flex-direction: column;">
+        <h1>Account Actions:</h1>
+        <div class="spearator"></div>
+        <div class="accountActionsContainer">
+            <label class="toggler btn btn-dark" onclick="ToggleDeleteConfirmation()">
+                Delete account!
+            </label>
+            <form action="DeleteProfile" method="post">
+                <div class="deleteConfirmation invisible">
+                    <div style="text-align:center;">
+                        Are you sure you want to delete this account?
+                    </div>
+                    <div style="text-align:center;">
+                        There is no going back!
+                    </div>
+                    <div style="width: max-content; margin: 0 auto;">
+                        <input type="submit" value="Yes" class="btn btn-danger" />
+                        <a asp-action="Profile" class="btn btn-warning">No</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

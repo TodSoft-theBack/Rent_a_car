@@ -30,9 +30,11 @@ namespace Rent_a_car.Controllers
             else
                 reservationHistory = _database.Reservations.Include(r => r.Car).ToList();
             ViewData["reservationHistory"] = reservationHistory;
-            _database.Reservations.Where(r => r.Status == (int)Statuses.Approved && r.DateOfReservation > DateTime.Now).ForEachAsync(r => r.Status = (int)Statuses.Ongoing);
-            _database.Reservations.Where(r => r.Status == (int)Statuses.Ongoing && r.EndDate < DateTime.Now).ForEachAsync(r => r.Status = (int)Statuses.Completed);
-            _database.Reservations.Where(r => r.EndDate < DateTime.Today).ForEachAsync(r => r.Status = (int)Statuses.Missed);
+
+            foreach (var reservation in _database.Reservations.Where(r => r.Status == (int)Statuses.Approved && r.DateOfReservation < DateTime.Today))
+                reservation.Status = (int)Statuses.Ongoing;
+            foreach (var reservation in _database.Reservations.Where(r => r.Status == (int)Statuses.Upcoming && r.DateOfReservation < DateTime.Today))
+                reservation.Status = (int)Statuses.Missed;
             _database.SaveChanges();
             return View();
         }
@@ -47,11 +49,19 @@ namespace Rent_a_car.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        public ActionResult RejectReservation(int id)
+        public ActionResult DisapproveReservation(int id)
         {
-            var reservation = _database.Reservations.Where(r => r.Id == id).FirstOrDefault();
+            var reservation = _database.Reservations.Find(id);
             reservation.Status = (int)Statuses.Upcoming;
             reservation.AprovedDate = null;
+            _database.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public ActionResult RejectReservation(int id)
+        {
+            var reservation = _database.Reservations.Find(id);
+            _database.Reservations.Remove(reservation);
             _database.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -73,6 +83,7 @@ namespace Rent_a_car.Controllers
             ViewBag.AvalableCarsIDsList = cars;
             return View();
         }
+        
         [HttpPost]
         public ActionResult MakeReservations(ReservationsVM input)
         {

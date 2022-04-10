@@ -13,19 +13,20 @@ namespace Rent_a_car.ViewModels
 {
     public class CarsVM
     {
-        public CarsVM(Cars car)
+        public static CarsVM GetCarsVM(Cars car) => new CarsVM()
         {
-            Model = car.Model;
-            Brand = car.Brand;
-            Year = int.Parse(car.Year);
-            PassengersCount = car.PassengersCount;
-            Description = car.Description;
-            EnginePower = car.EnginePower;
-            EngineType = car.EngineType;
-            GearBox = car.GearBox;
-            CarType = car.CarType;
-            PricePerDay = car.PricePerDay;
-        }
+            Model = car.Model,
+            Brand = car.Brand,
+            Year = int.Parse(car.Year),
+            PassengersCount = car.PassengersCount,
+            Description = car.Description,
+            EnginePower = car.EnginePower,
+            EngineType = car.EngineType,
+            GearBox = car.GearBox,
+            CarType = car.CarType,
+            PricePerDay = car.PricePerDay
+        };
+        public int Id { get; set; }
         [DisplayName("Model: ")]
         [Required(ErrorMessage = "*This field is Required!")]
         public string Model { get; set; }
@@ -35,7 +36,7 @@ namespace Rent_a_car.ViewModels
         public string Brand { get; set; }
 
         [DisplayName("Year: ")]
-        [Range(1950, 2022, ErrorMessage = "*Enter a valid date.")]
+        [Range(1950, 2050, ErrorMessage = "*Enter a valid year.")]
         [Required(ErrorMessage = "*This field is Required!")]
         [CarsYearValidation()]
         public int Year { get; set; }
@@ -50,8 +51,9 @@ namespace Rent_a_car.ViewModels
         public string Description { get; set; }
 
         [DisplayName("Price per day: ")]
-        [Range(50, 1000, ErrorMessage = "*Enter a valid price.")]
+        [Range(0, double.MaxValue, ErrorMessage = "*Enter a valid price.")]
         [Required(ErrorMessage = "*This field is Required!")]
+        [DataType(DataType.Currency)]
         public decimal PricePerDay { get; set; }
         [DisplayName("Gear box: ")]
         public int GearBox { get; set; }
@@ -79,5 +81,19 @@ namespace Rent_a_car.ViewModels
             CarType = this.CarType,
             PricePerDay = this.PricePerDay
         };
+        public Cars GetCar(Cars car)
+        {
+            car.Model = this.Model;
+            car.Brand = this.Brand;
+            car.Year = this.Year.ToString();
+            car.PassengersCount = this.PassengersCount;
+            car.Description = this.Description;
+            car.EnginePower = this.EnginePower;
+            car.EngineType = this.EngineType;
+            car.GearBox = this.GearBox;
+            car.CarType = this.CarType;
+            car.PricePerDay = this.PricePerDay;
+            return car;
+        }
     }
 }

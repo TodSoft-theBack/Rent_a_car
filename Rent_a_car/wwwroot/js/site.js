@@ -1,20 +1,33 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-function ToggleDateFilter()
-{
-    var element = document.querySelector(".dateFilter");
+﻿function ToggleInvisible(prompt) {
+    var element = document.querySelector("" + prompt);
     if (element == null) {
         return;
     }
     element.classList.toggle("invisible");
 }
-function ToggleGearBoxesFilter()
+
+function ToggleDeleteConfirmation()
 {
-    var element = document.querySelector(".gearBoxesFilter");
+    var element = document.querySelector(".toggler");
     if (element == null) {
         return;
     }
-    element.classList.toggle("invisible");
+    ToggleInvisible(".deleteConfirmation");
+    element.classList.remove("toggler");
+}
+
+function ToggleGearBoxesFilter()
+{
+    ToggleInvisible(".gearBoxesFilter");
+}
+function ToggleCarTypeFilter() {
+    ToggleInvisible(".carTypeFilter");
+}
+function ToggleEngineTypeFilter() {
+    ToggleInvisible(".engineTypeFilter");
+}
+
+function ToggleLoggedUserMenu()
+{
+    ToggleInvisible(".user-greeting + ul");
 }

@@ -1,24 +1,82 @@
 ﻿@using Rent_a_car.ExtentionMethods;
 @using Rent_a_car.Entities;
 @using Rent_a_car.ActionFilters;
+@model CarFilterVM
 @{
     ViewData["Title"] = "Cars page";
-    Users loggedUser = ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
-    List<Cars> avaliableCars = ViewContext.HttpContext.Session.GetObject<List<Cars>>("avaliableCars"); ;
+    Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    List<Cars> cars = ViewBag.avaliableCars;
+    var filter = this.ViewContext.HttpContext.Session.GetObject<CarFilterVM>("SelectedCarsFilter");
+    List<Cars> avaliableCars = cars;
+    if (!(filter is null))
+    {
+        if (filter.GearBox != -1)
+            avaliableCars = avaliableCars.Where(c => c.GearBox == filter.GearBox).ToList();
+        if (filter.CarType != -1)
+            avaliableCars = avaliableCars.Where(c => c.CarType == filter.CarType).ToList();
+        if (filter.EngineType != -1)
+            avaliableCars = avaliableCars.Where(c => c.EngineType == filter.EngineType).ToList();
+    }
 }
 <div>
-    <div>Avalable cars:</div>
-    <div>
-        Filters:
-    </div>
-    @{
-        foreach (var car in avaliableCars)
-        {
-            <div>
-                <div>
-                    @car.Brand @car.Model
+    <div class="text-center"><h1>Available cars:</h1></div>
+    <div style="display: flex;">
+        <div style="width: 20vw;">
+            <h3>Filters:</h3>
+            <form class="filtersContainer" method="post" asp-action="FilterSelectedCars">
+                <div class="filterContainer gearBoxFilterContainer">
+                    <div class="btn btn-outline-success" onclick="ToggleGearBoxesFilter()"> By Gearbox</div>
+                    <div class="gearBoxesFilter invisible">
+                        <select asp-for="GearBox" asp-items="ViewBag.gearBoxes"></select>
+                    </div>
                 </div>
-            </div>
-        }
-    }
+                <div class="filterContainer carTypeFilterContainer">
+                    <div class="btn btn-outline-success" onclick="ToggleCarTypeFilter()"> By Car type</div>
+                    <div class="carTypeFilter invisible">
+                        <select asp-for="CarType" asp-items="ViewBag.carTypes"></select>
+                    </div>
+                </div>
+                <div class="filterContainer engineTypeFilterContainer">
+                    <div class="btn btn-outline-success" onclick="ToggleEngineTypeFilter()"> By Engine type</div>
+                    <div class="engineTypeFilter invisible">
+                        <select asp-for="EngineType" asp-items="ViewBag.engineTypes"></select>
+                    </div>
+                </div>
+                <input type="submit" value="Filter cars!" class="btn btn-dark" />
+            </form> 
+        </div>
+        <div style="display:flex; flex-direction:column; width: max-content">
+            @foreach (var car in avaliableCars)
+            {
+                <div class="car-container" style="width: max-content">
+                    <div class="car-title text-center">
+                        @car.Brand @car.Model
+                    </div>
+                    <div style="display:flex; width: max-content">
+                        <div class="car-picture">
+                            <img src="~/CarImages/@car.Picture" />
+                        </div>
+                        <div class="car-attributes" style="display:flex;">
+                            <div style="display:flex; flex-direction:column;">
+                                <div>Engine power: @car.EnginePower</div>
+                                <div>Gearbox: @(((GearBoxes)car.GearBox).ToString())</div>
+                                <div>Engine type: @(((EngineTypes)car.EngineType).ToString())</div>
+                            </div>
+                            <form action="ReserveCar\@car.Id" method="post" style="display:flex; align-items:center; margin: 0.5rem 1rem">
+                                <div class="form-group">
+                                    <span>@Html.ValidationMessage("carError")</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="text-center">@car.PricePerDay</label>
+                                </div>
+                                <input type="submit" value="Reserve" class="btn btn-warning" />
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    
 </div>

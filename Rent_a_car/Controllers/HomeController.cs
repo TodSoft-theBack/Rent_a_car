@@ -38,6 +38,48 @@ namespace Rent_a_car.Controllers
             ViewBag.DropOffLocations = dropOffLocations;
             return View();
         }
+        [HttpPost]
+        public IActionResult Index(HomeQueryVM input)
+        {
+            var loggedUser = HttpContext.Session.GetObject<Users>("loggedUser");
+            if (loggedUser is null)
+                return RedirectToAction("LogIn", "Home");
+            List<SelectListItem> pickUpLocations = new List<SelectListItem>();
+            foreach (var location in _database.Location)
+                pickUpLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
+            List<SelectListItem> dropOffLocations = new List<SelectListItem>();
+            foreach (var location in _database.Location)
+                dropOffLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
+            dropOffLocations.Add(new SelectListItem("<Same as pick up>", "-1", true));
+            ViewBag.PickUpLocations = pickUpLocations;
+            ViewBag.DropOffLocations = dropOffLocations;
+            if (input.PickUpDate > input.DropOffDate)
+            {
+                this.ModelState.AddModelError("PickUpDate", "Pick up date cannot be after the drop off date!");
+                return View(input);
+            }
+            if (Math.Abs(input.PickUpDate.Subtract(input.DropOffDate).TotalDays) < 1)
+            {
+                this.ModelState.AddModelError("DropOffDate", "You cannot reserve a car for less than a day!");
+                return View(input);
+            }
+            if (input.PickUpDate.Date < DateTime.Today)
+            {
+                this.ModelState.AddModelError("PickUpDate", "Pick up date cannot be before today!");
+                return View(input);
+            }
+            if (input.DropOffDate.Date < DateTime.Today)
+            {
+                this.ModelState.AddModelError("DropOffDate", "Drop off date cannot be before today!");
+                return View(input);
+            }
+            if (!this.ModelState.IsValid)
+            {
+                return View(input);
+            }
+            HttpContext.Session.SetObject<HomeQueryVM>("filterData", input);            
+            return RedirectToAction("SelectedCars", "Cars");
+        }
         public IActionResult Register()
         {
             return View();
@@ -77,37 +119,17 @@ namespace Rent_a_car.Controllers
             HttpContext.Session.SetObject("loggedUser", user);
             return RedirectToAction("Index","Home");
         }
+        public IActionResult Profile()
+        {
+            return View();
+        }
         [HttpPost]
-        public IActionResult Index(HomeQueryVM input)
+        public IActionResult DeleteProfile()
         {
             var loggedUser = HttpContext.Session.GetObject<Users>("loggedUser");
-            if (loggedUser is null)
-                return RedirectToAction("LogIn", "Home");
-            List<SelectListItem> pickUpLocations = new List<SelectListItem>();
-            foreach (var location in _database.Location)
-                pickUpLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
-            List<SelectListItem> dropOffLocations = new List<SelectListItem>();
-            foreach (var location in _database.Location)
-                dropOffLocations.Add(new SelectListItem(location.Address, location.Id.ToString()));
-            dropOffLocations.Add(new SelectListItem("<Same as pick up>", "-1", true));
-            ViewBag.PickUpLocations = pickUpLocations;
-            ViewBag.DropOffLocations = dropOffLocations;
-            if (!this.ModelState.IsValid)
-            {
-                return View(input);
-            }
-            var cars = _database.Cars
-                .Include(c => c.Reservations)
-                .Where(c => c.Reservations.Count == 0 ||
-                    c.Reservations
-                    .Where(r => r.EndDate < input.PickUpDate && input.DropOffDate < r.DateOfReservation).Count() > 0).ToList();
-            if (cars is null)
-            {
-                this.ModelState.AddModelError("stateError", "No cars avalable for this period and places!");
-                return  View (input);
-            }
-            HttpContext.Session.SetObject<List<Cars>>("avaliableCars", cars);
-            return RedirectToAction("SelectedCars", "Cars");
+            _database.Users.Remove(loggedUser);
+            _database.SaveChanges();
+            return LogOut();
         }
         public IActionResult LogOut()
         {

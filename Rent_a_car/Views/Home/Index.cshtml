@@ -7,10 +7,10 @@
     Users loggedUser = this.ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
 }
 
-@if (loggedUser.IsAdmin == 0)
+@if (loggedUser.IsAdmin == 0) 
 {
-    <form asp-action="Index" asp-controller="Home" method="post">
-        <div style="display:flex; flex-direction: column; margin:0 auto; top:5rem;">
+    <form asp-action="Index" asp-controller="Home" method="post" style="display: flex; flex-direction: column; justify-content: center;">
+        <div style="width: 30vw; background-color:lightgray; padding:2rem; margin-top:4rem;">
             <div class="form-group">
                 <label asp-for="PickUpDate"></label>
                 <input type="date" asp-for="PickUpDate" />
@@ -22,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DropOffDate"></label>
-                <input type="date" asp-for="DropOffDate"/>
+                <input type="date" asp-for="DropOffDate" />
                 <span class="text-danger" asp-validation-for="DropOffDate"></span>
             </div>
             <div class="form-group">
@@ -30,18 +30,20 @@
                 <select asp-for="DropOffStation" asp-items="ViewBag.dropOffLocations"></select>
             </div>
             <div class="form-group">
-                <label class="text-danger">@Html.ValidationMessage("stateError")</label>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Search!" class="btn btn-success" />
             </div>
+            <div class="form-group">
+                <label class="text-danger">@Html.ValidationMessage("stateError")</label>
+            </div>
         </div>
-
     </form>
+    <div style="position:absolute; top: 10rem; right: 5rem; width:50vw; z-index:-1;">
+        <img src="~/CarImages/6c553be1-173c-4fc7-91a3-f2d56fbabc7c.jpg" style="width:100%;" />
+    </div>
 }
 else
 {
     <div class="text-center">
-        Rent a car here!
+        <h1>Rent a car here!</h1>
     </div>
 }

@@ -7,10 +7,10 @@ namespace Rent_a_car.Entities
 {
     public enum Statuses
     {
-        Approved,
-        Missed,
-        Ongoing,
         Upcoming,
-        Completed
+        Ongoing,
+        Approved,
+        Completed,
+        Missed
     }
 }

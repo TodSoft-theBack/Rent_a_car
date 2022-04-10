@@ -126,6 +126,72 @@ car-textContainer {
 .car-picture img {
     width: 40vmin;
 }
-.invisible{
+.car-header{
+    font-weight: bold;
+    font-size: 2rem;
+}
+car-subtitle{
+    color: lightgray;
+}
+.user-greeting{
+    display: flex;
+    justify-content:center;
+}
+.user-greeting + ul{
+    padding: 0;
+    margin: 0;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    position:absolute;
+    list-style: none;
+}
+.user-greeting + ul li{
+    padding: 0 1rem;
+    margin: 0.25rem 0;
+    border-radius: 5px;
+    text-align: center;
+}
+.user-greeting + ul li a{
+    text-decoration: none;
+    color: white;
+}
+.invisible {
     display: none;
+}
+.accountInfo {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+.accountInfo h1{
+    text-align:center;
+}
+.accountInfoContainer{
+    width: max-content;
+}
+.accountActions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.accountActions h1 {
+    text-align: center;
+}
+.accountActionsContainer{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.accountActionsContainer deleteConfirmation {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.form-group{
+    display:flex;
+    flex-direction: column;
+}
+.filterContainer{
+    margin: 0.5rem 0;
 }
